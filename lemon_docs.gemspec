@@ -11,7 +11,9 @@ Gem::Specification.new do |s|
   s.authors       = ['Yulia Oletskaya']
   s.email         = 'yulia.oletskaya@gmail.com'
 
-  s.files         = `git ls-files`.split($/)
+  s.files         = Dir['lib/**/*']
+  s.files         << Dir['*']
+  s.files         << Dir['ext/drafter/**/*'].reject { |f| f =~ /cmdline|test|features|README*|LICENSE|Gemfile*|\.xcode*/ }
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
@@ -20,6 +22,6 @@ Gem::Specification.new do |s|
   s.license       = 'MIT'
 
   s.add_dependency 'ffi', '~> 1.9'
-  s.add_dependency 'rake', '>= 11.3.0'
-  s.add_dependency 'bundler', '>= 1.8.2'
+  s.add_dependency 'rake', '~> 11.3'
+  s.add_dependency 'bundler', '~> 1.8'
 end

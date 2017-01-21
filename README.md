@@ -14,4 +14,4 @@ TODO: Add description
 Fork & Pull Request
 
 ## License
-MIT License. See the [LICENSE](https://github.com/tuwukee/lemon_docs/blob/master/LICENSE.txt) file.
+MIT License.
