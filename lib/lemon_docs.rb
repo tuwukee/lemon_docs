@@ -1,10 +1,13 @@
 require 'lemon_docs/binding'
 require 'lemon_docs/version'
+require 'fileutils'
 require 'ffi'
 require 'json'
 
 module LemonDocs
   include Binding
+
+  FOLDER_PATH = "doc/lemon_pages".freeze
 
   def self.parse(raw_blueprint)
     fail(ArgumentError, 'Expected string value') unless raw_blueprint.is_a?(String)
@@ -27,12 +30,24 @@ module LemonDocs
     LemonDocs::Memory.free(validation_result)
   end
 
-  # Parses API Blueprint from a file.
   def self.parse_file(file_path)
     file = File.new(file_path)
-    path = File.dirname(file_path)
+    parse(file.read)
+  end
 
-    LemonDocs::Parser.parse(file.read, path)
+  def self.generate_json_from_file(file_path)
+    file_name = File.basename(file_path)
+    path = FOLDER_PATH.dup
+
+    json_result = parse_file(file_path)
+
+    dir = File.dirname(path)
+    unless File.directory?(dir)
+      FileUtils.mkdir_p(dir)
+    end
+
+    path << "/#{file_name.split(/\./).first}.json"
+    File.write(path, JSON.pretty_generate(json_result))
   end
 
   private
