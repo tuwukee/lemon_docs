@@ -2,7 +2,7 @@ module LemonDocs
   module Validator
     def self.validate!(json, strict: true, show_output: true)
       errors = find_errors([], json['content'])
-      notable_errors = strict ? errors : errors.select {|error| error[:kind] == 'ERROR' }
+      notable_errors = strict ? errors : errors.select {|error| error[:kind] == 'error' }
 
       if show_output
         notable_errors.each do |error|
