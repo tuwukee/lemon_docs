@@ -4,14 +4,19 @@ TODO: Add description
 
 ## Installation
 
-`gem 'lemon_docs'`
+### As gem
+
+`gem install lemon_docs`
+
+### From source
+
+```
+git clone git@github.com:tuwukee/lemon_docs.git
+cd lemon_docs
+rake
+```
 
 ## Usage
-
-Compilation of C-modules
-```
-rake lemon_docs:compile
-```
 
 Convert API Blueprint files to JSON.
 ```
