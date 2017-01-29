@@ -4,6 +4,7 @@ require_relative 'lemon_docs/version'
 require 'fileutils'
 require 'ffi'
 require 'json'
+require 'redcarpet'
 
 module LemonDocs
   include Binding
@@ -25,7 +26,7 @@ module LemonDocs
     else
       json_output(validation_result)
     end
-    LemonDocs::Validator.validate!(output, strict: strict, show_output: show_output)
+    output
   ensure
     LemonDocs::Memory.free(parse_result)
     LemonDocs::Memory.free(validation_result)
@@ -33,7 +34,12 @@ module LemonDocs
 
   def self.parse_file(file_path)
     file = File.new(file_path)
-    parse(file.read)
+    content = file.read
+    output = parse(content)
+    if LemonDocs::Validator.validate!(output)
+      markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(content)
+      IO.write(file_path.gsub(".md", ".html"), markdown)
+    end
   end
 
   def self.generate_json_from_file(file_path)
