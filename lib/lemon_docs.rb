@@ -1,5 +1,5 @@
-require 'lemon_docs/binding'
-require 'lemon_docs/version'
+require_relative 'lemon_docs/binding'
+require_relative 'lemon_docs/version'
 require 'fileutils'
 require 'ffi'
 require 'json'
