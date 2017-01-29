@@ -24,5 +24,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'ffi', '~> 1.9'
   s.add_dependency 'rake', '~> 11.3'
   s.add_dependency 'bundler', '~> 1.8'
-  s.add_dependency 'pry'
 end
