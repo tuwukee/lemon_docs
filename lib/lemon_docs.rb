@@ -54,6 +54,6 @@ module LemonDocs
 
   def self.json_output(result)
     result = result.get_pointer(0)
-    JSON.parse(result.null? ? nil : result.read_string)
+    JSON.parse(result.null? ? '{}' : result.read_string)
   end
 end
