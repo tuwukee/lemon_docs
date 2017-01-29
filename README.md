@@ -8,7 +8,7 @@ TODO: Add description
 
 ## Usage
 
-First, complile the C-modules
+Compilation of C-modules
 ```
 rake lemon_docs:compile
 ```
