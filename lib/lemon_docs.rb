@@ -1,15 +1,17 @@
 require_relative 'lemon_docs/binding'
+require_relative 'lemon_docs/validator'
 require_relative 'lemon_docs/version'
 require 'fileutils'
 require 'ffi'
 require 'json'
+require 'redcarpet'
 
 module LemonDocs
   include Binding
 
   FOLDER_PATH = "doc/lemon_pages".freeze
 
-  def self.parse(raw_blueprint)
+  def self.parse(raw_blueprint, strict: true, show_output: true)
     fail(ArgumentError, 'Expected string value') unless raw_blueprint.is_a?(String)
 
     parse_result = FFI::MemoryPointer.new(:pointer)
@@ -18,13 +20,13 @@ module LemonDocs
     serialize_options[:sourcemap] = 1
     serialize_options[:drafter_format] = 1
 
-    if LemonDocs::Binding.drafter_check_blueprint(raw_blueprint, validation_result, 0) == 0
+    output = if LemonDocs::Binding.drafter_check_blueprint(raw_blueprint, validation_result, 0) == 0
       LemonDocs::Binding.drafter_parse_blueprint_to(raw_blueprint, parse_result, 0, serialize_options)
       json_output(parse_result)
     else
       json_output(validation_result)
     end
-
+    output
   ensure
     LemonDocs::Memory.free(parse_result)
     LemonDocs::Memory.free(validation_result)
@@ -32,7 +34,12 @@ module LemonDocs
 
   def self.parse_file(file_path)
     file = File.new(file_path)
-    parse(file.read)
+    content = file.read
+    output = parse(content)
+    if LemonDocs::Validator.validate!(output)
+      markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(content)
+      IO.write(file_path.gsub(".md", ".html"), markdown)
+    end
   end
 
   def self.generate_json_from_file(file_path)
